@@ -48,16 +48,20 @@ $Promise.prototype.callHandlers = function() {
   var cbValue = this.value
   if (this.state === 'resolved'){
     this.handlerGroups.forEach(function(callBacks){
-      callBacks.successCb(cbValue);
+      if (callBacks.successCb) callBacks.successCb(cbValue);
       })
     }
   if (this.state === 'rejected'){
     this.handlerGroups.forEach(function(callBacks){
-      callBacks.errorCb(cbValue);
+      if (callBacks.errorCb) callBacks.errorCb(cbValue);
       })
   }
   this.handlerGroups = [];
 };
+
+$Promise.prototype.catch = function(errorCb) {
+  return this.then(null, errorCb);
+}
 
 
 /*-------------------------------------------------------
